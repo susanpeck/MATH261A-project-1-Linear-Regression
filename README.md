@@ -1,5 +1,7 @@
-# MATH261A-project-template
-Example project repository for MATH 261A.
+# MATH261A-project-one
+MATH 261A Project 1 Repository
+Susan Peck
+Fall 2025
 
 ## Data 
 
