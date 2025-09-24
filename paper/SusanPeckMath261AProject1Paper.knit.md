@@ -12,19 +12,9 @@ editor:
     wrap: 72
 ---
 
-```{r}
-#| include: false
-#| warning: false
-#| message: false
 
-library(ggplot2)
-library(tidyverse)
-library(dplyr)
-library(knitr)
 
-water_raw_data <- data.frame(read.csv("../data/SAFER_RA.csv"))
 
-```
 
 # Abstract {#sec-abstract}
 
@@ -119,34 +109,15 @@ system. Only smaller water systems with fewer than 3300 service
 connections are included. Each data point is colored to show if the
 water system is at risk of failing to provide clean drinking water.
 
-```{r fig-calenviron-mhi}
-#| echo: false # not going to print out the code, but will do the plot
-#| warning: false
-#| message: false
-#| fig-cap: "Scatter plot of calenvironscreen versus MHI grouped by risk assessment values"
 
-# remove any rows with the entry "Missing" or blank cell
-remove_missing_data <- filter(water_raw_data, !CALENVIRO_SCREEN_SCORE %in% c("Missing",""), !MHI %in% c("Missing",""),  !POPULATION %in% c("Missing",""),  !AFFORDABILITY_SCORE %in% c("Missing",""), !ACCESSIBILITY_SCORE %in% c("Missing",""), !AFFORDABILITY_SCORE %in% c("Missing",""), !TMF_CAPACITY_SCORE %in% c("Missing",""))
 
-# change character columns to numeric
-remove_missing_data$CALENVIRO_SCREEN_SCORE <- as.numeric(remove_missing_data$CALENVIRO_SCREEN_SCORE)
-remove_missing_data$MHI <- as.numeric(remove_missing_data$MHI)
-remove_missing_data$AFFORDABILITY_SCORE <- as.numeric(remove_missing_data$AFFORDABILITY_SCORE)
-remove_missing_data$WATER_QUALITY_SCORE <- as.numeric(remove_missing_data$WATER_QUALITY_SCORE)
-remove_missing_data$ACCESSIBILITY_SCORE <- as.numeric(remove_missing_data$ACCESSIBILITY_SCORE)
-remove_missing_data$TMF_CAPACITY_SCORE <- as.numeric(remove_missing_data$TMF_CAPACITY_SCORE)
+::: {.cell}
+::: {.cell-output-display}
+![Scatter plot of calenvironscreen versus MHI grouped by risk assessment values](SusanPeckMath261AProject1Paper_files/figure-pdf/fig-calenviron-mhi-1.pdf){#fig-calenviron-mhi}
+:::
+:::
 
-# filter data so has only rows with fewer than 3300 service connections
-water_data_small_systems <- filter(remove_missing_data, SERVICE_CONNECTIONS < 3300)
 
-# scatterplot
-ggplot(data = water_data_small_systems, aes(x = MHI, y = CALENVIRO_SCREEN_SCORE, color = RISK_ASSESSMENT_RESULT)) +
-  geom_point() + 
-  ylab("CalEnvironScreen Score") + 
-  xlab("Median Household Income ($)") +
-  labs(title = "California Environmental Screening Score vs Median Household Income", subtitle = "Grouped by Small Water Systems' Risk Assessment Value")
-
-```
 
 The Median Household Income (MHI) uses the annual income value for all
 the people in a single household. The MHI for this data set is the
@@ -180,16 +151,17 @@ shown below.
 
 $$Y_i = \beta_0 +\beta_1 X_i + \varepsilon_i$$
 
-$Y_i$ represents the response variable. In this paper the first linear regression analysis the response
-variable is the CalEnviroScreen Score.
+$Y_i$ represents the response variable. In this analysis the response
+variable is
 
-$X_i$ represents the predictor variable. In this paper the first linear regression analysis the predictor variable is MHI.
+$X_i$ represents the predictor variable. In this analysis the predictor
+variable is
 
-$\beta_0$ is the y-intercept of the model. For the first linear regression analysis this would be the expected mean value of the CalEnviroScreen score for water system population with a median household income of $0. A household could have an income of $0, but it is unlikely to be a median household income for a population, so this particular intercept doesn't have a direct interpretation.
+$\beta_0$ is the y-intercept of the model.
 
 $\beta_1$ is the slope of the model. The slope represents how much the
 response variable changes for a unit change in the predictor variable.
-In the first regression model the slope would represent how much we would expect the mean CalEnviroScreen Score to change based on a one dollar change for the MHI. 
+In this model
 
 The analysis was done using R programming {@rcode} and built in
 function, lm, to fit the linear model and provide calculated estimate
@@ -210,31 +182,15 @@ lower MHI seems to have more At-Risk water systems. The larger the value
 of the MHI for the water system, the fewer water systems that have high
 CalEnviroScreen score.
 
-```{r fig_calenviro_mhi_DAC}
-#| echo: false # not going to print out the code, but will do the plot
-#| warning: false
-#| message: false
-#| fig-cap: "Scatter plot of calenvironscreen versus MHI grouped by service area economic status"
 
-# scatterplot
-ggplot(data = water_data_small_systems, aes(x = MHI, y = CALENVIRO_SCREEN_SCORE, color = SERVICE_AREA_ECONOMIC_STATUS)) +
-  geom_point() + 
-  ylab("CalEnvironScreen Score") + 
-  xlab("Median Household Income ($)") +
-  labs(title = "California Environmental Screening Score vs Median Household Income", subtitle = "Grouped by Service Area Economic Status")
 
-max_dac_calenviro <- water_data_small_systems |> 
-  group_by(SERVICE_AREA_ECONOMIC_STATUS) |>
-  summarise(max = max(CALENVIRO_SCREEN_SCORE, na.rm = TRUE))
+::: {.cell}
+::: {.cell-output-display}
+![Scatter plot of calenvironscreen versus MHI grouped by service area economic status](SusanPeckMath261AProject1Paper_files/figure-pdf/fig_calenviro_mhi_DAC-1.pdf)
+:::
+:::
 
-min_dac_calenviro <- water_data_small_systems |> 
-  group_by(SERVICE_AREA_ECONOMIC_STATUS) |>
-  summarise(min = min(CALENVIRO_SCREEN_SCORE, na.rm = TRUE))
 
-ave_dac_calenviro <- water_data_small_systems |> 
-  group_by(SERVICE_AREA_ECONOMIC_STATUS) |>
-  summarise(ave = mean(CALENVIRO_SCREEN_SCORE, na.rm = TRUE))
-```
 
 The scatterplot above again graphs CalEnviroScreen Score against MHI,
 but this time groups by the economic status of the service area. The
@@ -246,19 +202,15 @@ the scatterplot. Both the DAC and SDAC communities have a large range of
 CalEnviroScreen Scores. The Non-DAC communities have a smaller range of
 values and the values are less in general.
 
-```{r}
-#| echo: false # not going to print out the code, but will do the plot
-#| warning: false
-#| message: false
 
-lm_calenviro <- lm(CALENVIRO_SCREEN_SCORE ~ MHI, water_data_small_systems)
-lm_calenviro_summary <- summary(lm_calenviro)
-```
 
-The SDAC communities CalEnviroScreen Score ranged from `r round(min_dac_calenviro[3,2], 3)` to `r round(max_dac_calenviro[3,2],3)` with and average value of `r round(ave_dac_calenviro[3,2],3)`. The DAC communities CalEnviroScreen Score ranged from `r round(min_dac_calenviro[1,2], 3)` to `r round(max_dac_calenviro[1,2],3)` with and average value of `r round(ave_dac_calenviro[1,2],3)`.The Non-DAC communities CalEnviroScreen Score ranged from `r round(min_dac_calenviro[2,2], 3)` to `r round(max_dac_calenviro[2,2],3)` with and average value of `r round(ave_dac_calenviro[2,2],3)`.
+::: {.cell}
 
-The simple linear regression model for this relationship would be
+:::
 
+
+
+The SDAC communities CalEnviroScreen Score ranged from 4.551 to 69.86 with and average value of 28.688. The DAC communities CalEnviroScreen Score ranged from 4.035 to 73.036 with and average value of 24.858.The Non-DAC communities CalEnviroScreen Score ranged from 1.372 to 56.183 with and average value of 16.389.
 
 
 # Appendix A DEFINITIONS {#sec-definitions}
@@ -361,3 +313,4 @@ quality and adequacy of the water supply.
 ![](Thresholds4.png){fig-align="center"}
 
 # References
+
