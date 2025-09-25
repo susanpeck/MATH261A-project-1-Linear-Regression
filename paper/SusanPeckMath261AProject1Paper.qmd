@@ -1,6 +1,6 @@
 ---
-title: "California Water Systems"
-subtitle: "Safe Drinking Water in Smaller Communities"
+title: "Safe Drinking Water for California Water Systems"
+subtitle: "At Risk Small and Disadvantaged Communities"
 author: "Susan Peck"
 thanks: "Project repository available at: https://github.com/susanpeck/MATH261A-project-1-Linear-Regression"
 date: today
@@ -20,7 +20,6 @@ editor:
 library(ggplot2)
 library(tidyverse)
 library(dplyr)
-library(knitr)
 
 water_raw_data <- data.frame(read.csv("../data/SAFER_RA.csv"))
 
@@ -30,7 +29,7 @@ water_raw_data <- data.frame(read.csv("../data/SAFER_RA.csv"))
 
 This will be a great abstract summarizing everything succinctly and also
 making sure that people want to read the rest of my paper. It will be
-intriguing and informative.
+intriguing and informative. I understand that not having an abstract in my draft means that you can not give me constructive and timely feedback on this part of my paper.
 
 # Introduction {#sec-introduction}
 
@@ -72,9 +71,9 @@ systems and fix problems in a sustainable way. This paper will
 investigate to see if there are correlations between economic status of
 the population a small water system serves and indicator scores.
 
-This paper will describe the data from the Drinking Water Needs
+This paper will detail the data obtained from the Drinking Water Needs
 Assessment and relevant variables, describe the general simple linear
-regression model used to analyze potential correlations, and then show
+regression model used to analyze potential correlations, and show
 the results of the linear regression and residual analysis.
 
 # Data {#sec-data}
@@ -191,6 +190,13 @@ $\beta_1$ is the slope of the model. The slope represents how much the
 response variable changes for a unit change in the predictor variable.
 In the first regression model the slope would represent how much we would expect the mean CalEnviroScreen Score to change based on a one dollar change for the MHI. 
 
+$\varepsilon_i$ are the error terms.
+
+This model assumes a linear relationship between Y and X. If the actual relationship between Y and X is not a linear one, then the model could be a bad fit for the data, to the extreme of not being useful at all, or possibly just have some bias and predictive values are off. 
+
+The model also assumes that the error terms are independent, have a constant variance for all levels of the predictor variable X, the mean of the error terms is zero, and the error terms are normally distributed. If these assumptions are not true then the values and confidence intervals can be misleading. For this data set the sample size is large enough that the normality assumption is less important. 
+
+
 The analysis was done using R programming {@rcode} and built in
 function, lm, to fit the linear model and provide calculated estimate
 values for the slope and intercept of the model. The summary function of
@@ -253,17 +259,21 @@ values and the values are less in general.
 
 lm_calenviro <- lm(CALENVIRO_SCREEN_SCORE ~ MHI, water_data_small_systems)
 lm_calenviro_summary <- summary(lm_calenviro)
+
+lm_calenviro_summary
 ```
 
 The SDAC communities CalEnviroScreen Score ranged from `r round(min_dac_calenviro[3,2], 3)` to `r round(max_dac_calenviro[3,2],3)` with and average value of `r round(ave_dac_calenviro[3,2],3)`. The DAC communities CalEnviroScreen Score ranged from `r round(min_dac_calenviro[1,2], 3)` to `r round(max_dac_calenviro[1,2],3)` with and average value of `r round(ave_dac_calenviro[1,2],3)`.The Non-DAC communities CalEnviroScreen Score ranged from `r round(min_dac_calenviro[2,2], 3)` to `r round(max_dac_calenviro[2,2],3)` with and average value of `r round(ave_dac_calenviro[2,2],3)`.
 
-The simple linear regression model for this relationship would be
+The simple linear regression model for this relationship would have a $b_0$ value of `r round(coef(lm_calenviro)[1],3)` and the $b_1$ value of `r round(coef(lm_calenviro)[2],4)`. As discussed in the Methods Section @sec-methods, the intercept $b_0$ does not have a relevant meaning for a predictor value of MHI equal to zero. The $b_1$ value represents the slope of the linear model and means that for every dollar increase in the Median Household Income level for a water system's population, the population has a decreased CalEnviroScreen Score of about `r round(coef(lm_calenviro)[2],4)`. The negative slope value matches the visual impression from the scatterplot that populations with a higher MHI will have a lower CalEnviroScreen score. 
+
+In the model the p-value is small (much smaller than 0.001) for both the intercept and slope estimates,  indicating there may be some significance to the model. However, the large range of values in the data for each predictor level, and the smaller $R^2$ value of ` r lm_calenviro_summary$r.squared` means that the model may not be the best fit for the data and may not do a good job of explaining the variance.
 
 
 
 # Appendix A DEFINITIONS {#sec-definitions}
 
-“Affordability Threshold” means the level, point, or value that
+*Affordability Threshold* means the level, point, or value that
 delineates if a water system’s residential customer charges, designed to
 ensure the water systems can provide drinking water that meets State and
 Federal standards, are unaffordable. For the purposes of the 2021
@@ -273,7 +283,7 @@ Income; Extreme Water Bill; and Percent Shut-Offs. Learn more about
 current and future indicators and affordability thresholds in Appendix
 E.
 
-“Affordability Assessment” means the identification of any community
+*Affordability Assessment* means the identification of any community
 water system that serves a disadvantaged community that must charge fees
 that exceed the affordability threshold established by the State Water
 Board in order to supply, treat, and distribute potable water that
@@ -282,14 +292,14 @@ Affordability Assessment evaluates several different affordability
 indicators to identify communities that may be experiencing
 affordability challenges. (Health & Saf. Code, § 116769, subd. (2)(B).
 
-“At-Risk public water systems” or “At-Risk PWS” means community water
+*At-Risk public water systems* or *At-Risk PWS* means community water
 systems with 3,300 service connections or less and K-12 schools that are
 at risk of failing to meet one or more key Human Right to Water goals:
 (1) providing safe drinking water; (2) accessible drinking water; (3)
 affordable drinking water; and/or (4) maintaining a sustainable water
 system.
 
-“Median household income” or “MHI” means the household income that
+*Median household income* or *MHI* means the household income that
 represents the median or middle value for the community. The methods
 utilized for calculating median household income are included in
 Appendix A and Appendix E. Median household incomes in this document are
@@ -298,33 +308,33 @@ household income for determination of funding eligibility is completed
 on a system by system basis by the State Water Board’s Division of
 Financial Assistance.
 
-“Risk indicator” means the quantifiable measurements of key data points
+*Risk indicator* means the quantifiable measurements of key data points
 that allow the State Water Board to assess the potential for a community
 water system or a transient noncommunity water system that serves a K-12
 school to fail to sustainably provide an adequate supply of safe
 drinking water due to water quality, water accessibility, affordability,
 institutional, and/or TMF capacity issues.
 
-“Risk threshold” means the levels, points, or values associated with an
+*Risk threshold* means the levels, points, or values associated with an
 individual risk indicator that delineates when a water system is more
 at-risk of failing, typically based on regulatory requirements or
 industry standards.
 
-“Score” means a standardized numerical value that is scaled between 0
+*Score* means a standardized numerical value that is scaled between 0
 and 1 for risk points across risk indicators. Standardized scores enable
 the evaluation and comparison of risk indicators.
 
-“Service connection” means the point of connection between the
+*Service connection* means the point of connection between the
 customer’s piping or constructed conveyance, and the water system’s
 meter, service pipe, or constructed conveyance, with certain exceptions
 set out in the definition in the Health and Safety Code. (See Health &
 Saf. Code, § 116275, subd. (s).)
 
-“Small community water system” means a CWS that serves no more than
+*Small community water system* means a CWS that serves no more than
 3,300 service connections or a yearlong population of no more than
 10,000 persons. (Health & Saf. Code, § 116275, subd. (z).)
 
-"Risk Indicators" means quantifiable measurements of key data points
+*Risk Indicators* means quantifiable measurements of key data points
 that allow the State Water Board to assess the probability of a water
 system’s failure to deliver safe drinking water or other infrastructure
 and institutional failures. Risk indicators that measure water quality,
@@ -333,11 +343,11 @@ their criticality as it relates to a system’s ability to remain in
 compliance with safe drinking water standards and their data
 availability and quality across the State.
 
-"Risk Indicator Thresholds" are the levels, points, or values associated
+*Risk Indicator Thresholds* are the levels, points, or values associated
 with an individual risk indicator that delineates when a water system is
 more at-risk of failing.
 
-"Scores & Weights" are the application of a multiplying value or weight
+*Scores & Weights* are the application of a multiplying value or weight
 to each risk indicator and risk category, as certain risk indicators and
 categories may be deemed more critical than others and/or some may be
 out of the control of the water system. The application of weights to
@@ -345,7 +355,7 @@ risk indicators and risk categories allows the State Water Board
 multiple ways to assess all risk indicators within each category
 together in a combined Risk Assessment score.
 
-"TMF Capacity" risk indicators measure a system’s technical, managerial
+*TMF Capacity* risk indicators measure a system’s technical, managerial
 and financial (TMF) capacity to plan for, achieve, and maintain long
 term compliance with drinking water standards, thereby ensuring the
 quality and adequacy of the water supply.
