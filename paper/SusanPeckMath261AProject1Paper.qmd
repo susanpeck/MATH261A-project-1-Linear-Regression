@@ -269,7 +269,24 @@ The simple linear regression model for this relationship would have a $b_0$ valu
 
 In the model the p-value is small (much smaller than 0.001) for both the intercept and slope estimates,  indicating there may be some significance to the model. However, the large range of values in the data for each predictor level, and the smaller $R^2$ value of ` r lm_calenviro_summary$r.squared` means that the model may not be the best fit for the data and may not do a good job of explaining the variance.
 
+The CalEnviroScreen score is the result of several factors that may contribute to pollution in an area and is not explained purely by the income level of the local population. 
 
+Below is a residual plot from the linear regression model, plotting the residual against the fitted value. If this plot shows random points above and below zero with no clear trend then this suggests that the model could be a good fit for the data. If the residuals show a trend that is curved or something that is not horizontal at y=0, it could suggest some of the assumptions in the model are not met. 
+
+```{r}
+#| echo: false # not going to print out the code, but will do the plot
+#| warning: false
+#| message: false
+#| fig-cap: "Residual plot of CalEnvironScreen Score versus MHI"
+
+plot(lm_calenviro, which = 1)
+```
+
+The residual plot above does have a trend. Most of the points on the left are above the y=0 line, and most of the points on the right are below the y=0 line. This indicates that the model doesn't explain all of the variance besides random error. 
+
+The residuals also have a wider range on the right of the plot, fanning out, meaning the assumption of constant variance in the error terms is not met. The p-test or t-test values may not be reliable.
+
+I would have liked to explore more of the relationships between the indicator scores and MHI, as well as between the indicator scores to see if any of them have a linear relationship and what that could mean. I am not sure how many linear regression analyses would be appropriate in this project.
 
 # Appendix A DEFINITIONS {#sec-definitions}
 
