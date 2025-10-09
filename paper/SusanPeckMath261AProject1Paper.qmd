@@ -28,11 +28,7 @@ water_raw_data <- data.frame(read.csv("../data/SAFER_RA.csv"))
 
 # Abstract {#sec-abstract}
 
-This will be a great abstract summarizing everything succinctly and also
-making sure that people want to read the rest of my paper. It will be
-intriguing and informative. I understand that not having an abstract in
-my draft means that you can not give me constructive and timely feedback
-on this part of my paper.
+This paper looks at whether an environmental, health, and socioeconomic score is related to the risk of small water systems failing in California. Using 2024 data from the Drinking Water Needs Assessment and the CalEnviroScreen tool, the study focuses on systems serving fewer than 3,300 connections. A simple linear regression model tested how the CalEnviroScreen score, which measures pollution burden and population characteristic, relates to the Total Risk Score for each water system. The results show a small but significant positive relationship. The communities with higher pollution tend to have water systems at greater risk. However, the model explains only a small part of the variation, so it should not be used alone to predict risk. The findings suggest pollution data can help guide support for disadvantaged communities but need to be combined with other measures.
 
 # Introduction {#sec-introduction}
 
@@ -94,8 +90,6 @@ about the positive association seen in the linear regression model and
 that though there seems to be some significance to values in the model,
 it would probably not be good to use the model to predict which
 communities could use funding based only on the CalEnviroScreen score.
-
-ADD SOME ACTUAL NUMBERS TO THE INTRO?
 
 # Data {#sec-data}
 
@@ -416,15 +410,12 @@ In the Q-Q plot of the residuals @fig-qq the values stray far from the y=x line,
 
 # Discussion {#sec-discussion}
 
-yes linear association validity? representativeness? errors independent,
-constant variance, is this because both scores include indicators that
-deal with socio-economic status? probably not a good model for
-prediction yes it is nice because if we could use one, it saves
-resources from having to do two completely separate risk calculations is
-there a better way to get funding to the appropriate places instead of
-waiting until water systems are already failing or at risk of failing?
+If the CalEnviroScreen Scores are a good predictor of the Total Risk Score response variable, a possible application of the model would be to use the CalEnviroScreen scores to decide which small water systems get funding and resources. Right now there are multiple agencies looking at similar data and ideas: can we identify factors put water quality and water systems at risk for contamination or failing to provide safe and accessible water. This puts a strain on resources. If we can use a score or other information that already exists to predict with some certainty which water systems are at risk of failing for any reason, then the funding can have a more direct path.
 
-i am pushing this very incomplete assignment so that I have something in both places, putting my kids to sleep, and hopefully back at it.
+The linear model in this paper suggests that there is a positive association between the two scores, and a linear model is an appropriate model to use. However, both scores are based on a weighted calculation of approximately 20 indicators each. And some of the indicators in both calculations overlap in the information they provide. Both scores look at socioeconomic status of the populations served in different locations and use it as part of the calculation. This is a positive because if a similar indicator is a good predictor of whether a water system is at risk of failing, then one score could be used in place of the other. However, that overlap limits how much we can trust the predictive value of the linear regression model because that association could be based on that similar indicator.
+
+There is still work to be done to evaluate whether or not the funding and improvements are actually helping the small water systems that are at risk of failure. We still do not know if the Total Risk Score is correctly identifying the communities with the highest need or highest risk, and if the improvements are making sustainable long term improvements. 
+
 
 \newpage
 
