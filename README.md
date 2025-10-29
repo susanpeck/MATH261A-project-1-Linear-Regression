@@ -1,6 +1,10 @@
 # SJSU MATH261A Regression Analysis Project One
 
-MATH 261A Project 1 Repository Author: Susan Peck Date: October 29, 2025
+MATH 261A Project 1 Repository
+
+Author: Susan Peck
+
+Date: October 29, 2025
 
 ## File Structure
 
@@ -26,7 +30,7 @@ The following resources were used for preliminary research:
 -   Stack Overflow
 -   Speaking with Ali and Isis
 
-Search Engines and ChatGPT were to verify that I was not missing crucial information like types of assumptions used in a t-test, and as a thesaurus when I used the word "suggests" one too many times. All work was done by myself, and no one else.
+Search Engines and ChatGPT were to verify that I was not missing crucial information like types of assumptions used in a t-test, and as a thesaurus when I used the word "suggests" one too many times. Stack Overflow was used to re-teach or learn details of options on R code, usually within ggplot. All work was done by myself, and no one else.
 
 # Acknowledgments
 
