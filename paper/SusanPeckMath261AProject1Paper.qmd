@@ -1,6 +1,6 @@
 ---
 title: "Safe Drinking Water for California Water Systems"
-subtitle: "At Risk Small and Disadvantaged Communities"
+subtitle: "Can an Environmental Score be Used to Predict Failing Water Systems?"
 author: "Susan Peck"
 thanks: "Project repository available at: https://github.com/susanpeck/MATH261A-project-1-Linear-Regression"
 date: today
@@ -28,7 +28,19 @@ water_raw_data <- data.frame(read.csv("../data/SAFER_RA.csv"))
 
 # Abstract {#sec-abstract}
 
-This paper looks at whether an environmental, health, and socioeconomic score is related to the risk of small water systems failing in California. Using 2024 data from the Drinking Water Needs Assessment and the CalEnviroScreen tool, the study focuses on systems serving fewer than 3,300 connections. A simple linear regression model tested how the CalEnviroScreen score, which measures pollution burden and population characteristic, relates to the Total Risk Score for each water system. The results show a small but significant positive relationship. The communities with higher pollution tend to have water systems at greater risk. However, the model explains only a small part of the variation, so it should not be used alone to predict risk. The findings suggest pollution data can help guide support for disadvantaged communities but need to be combined with other measures.
+This paper looks at whether an environmental, health, and socioeconomic
+score is related to the risk of small water systems failing in
+California. Using 2024 data from the Drinking Water Needs Assessment and
+the CalEnviroScreen tool, the study focuses on systems serving fewer
+than 3,300 connections. A simple linear regression model tested how the
+CalEnviroScreen score, which measures pollution burden and population
+characteristic, relates to the Total Risk Score for each water system.
+The results show a small but significant positive relationship. The
+communities with higher pollution tend to have water systems at greater
+risk. However, the model explains only a small part of the variation, so
+it should not be used alone to predict risk. The findings suggest
+pollution data can help guide support for disadvantaged communities but
+need to be combined with other measures.
 
 # Introduction {#sec-introduction}
 
@@ -37,8 +49,8 @@ population and meets California state drinking water standards that are
 more strict than federal regulations. This still leaves about 400
 failing water systems serving 870,000 people, 600 water systems serving
 1.6 million people that are at risk of failure, and more than 400 others
-serving another 1.6 million that are potentially at risk of failing.
-[@waterfail] Smaller communities and populations that are economically
+serving another 1.6 million that are potentially at risk of failing
+[@waterfail]. Smaller communities and populations that are economically
 disadvantaged may be more at risk of having water with higher levels of
 contaminants, or they may not have the resources to address and fix
 problems with the water system.
@@ -89,7 +101,10 @@ analysis of the residuals. The Discussion @sec-discussion will talk
 about the positive association seen in the linear regression model and
 that though there seems to be some significance to values in the model,
 it would probably not be good to use the model to predict which
-communities could use funding based only on the CalEnviroScreen score.
+communities could use funding based only on the CalEnviroScreen score
+with out additional investigation because both are calculations based on
+multiple indicator values. Some of the indicators overlap in information
+like socioeconomic status.
 
 # Data {#sec-data}
 
@@ -98,10 +113,12 @@ report [@2024needsreport] through the SAFER program and definitions from
 the original 2021 Drinking Water Needs Assessment report
 [@2021needsreport]. The data was gathered from water systems' annual
 reports, water quality testing results sent to the California Water
-Board, and Census data. The reports were prepared by the California
-State Water Resources Control Board within the California Environmental
-Protection Agency (CalEPA), in partnership with the UCLA Luskin Center
-for Innovation (UCLA).
+Board, and Census data. This data set contains information from 3214
+different water systems in California, each with 140 variables with
+information about the water system. The Drinking Water Needs Assessment
+reports were prepared by the California State Water Resources Control
+Board within the California Environmental Protection Agency (CalEPA), in
+partnership with the UCLA Luskin Center for Innovation (UCLA).
 
 The report calculated a risk assessment value for each water system. The
 Risk Assessment Result is based off of a score for each of 19 risk
@@ -115,7 +132,7 @@ Potentially-At-Risk. Some systems were not evaluated and have a Not
 Assessed value.
 
 ![Risk Indicator Categories](Risk_Indicators_2021.png){#fig-risk
-fig-align="center" width="500"}
+fig-align="center" width="475"}
 
 All "At Risk" systems exceed a 'threshold of concern' (see
 @sec-thresholds for specific values) for at least four risk indicators.
@@ -153,6 +170,13 @@ Environmental Effects, Sensitive Populations, and Socioeconomic factors.
 Each indicator is based on current data from a public agency and every
 piece of data has a location where the measurement was taken. A higher
 score is an area that has a higher pollution burden than a lower score.
+
+The values used in this paper are based on calculated scores from
+individual indicator values. Each part of the calculation and the data
+collection are subject to uncertainty or subjective analysis. Some of
+the data is from testing in labs, like presence of bacteria or toxins,
+and other data is choices made by people of which indicators to keep or
+exclude in the calculations.
 
 # Methods {#sec-methods}
 
@@ -196,29 +220,31 @@ distributed. If these assumptions are not true then the values and
 confidence intervals can be misleading. For this data set the sample
 size is large enough that the normality assumption is less important.
 
-The analysis was done using R programming {@rcode} and built in
-function, lm, to fit the linear model and provide calculated estimate
-values for the slope and intercept of the model. The summary function of
-the lm model also shows a p-value for each of the estimates and a $R^2$
-value.
+The analysis was done using R programming [@rcode] and built in
+function, lm(), to fit the linear model and calculate estimated slope
+and intercept values. The summary() function takes the fitted model and
+provides a p-value for each of the estimates and a $R^2$ value.
+
+In this analysis, the null hypothesis is that $\beta_1 = 0$ , meaning
+that the slope of the linear regression model is zero, and the
+alternative hypothesis is $\beta_1 \neq 0$. If the null hypothesis is
+true, it would suggest that no linear relationship exists between the
+response and predictor variables. A t test is used to evaluate this
+hypothesis, and if the assumptions above are met, then a p-value less
+than 0.05 would lead to rejecting the null hypothesis. This means that
+there is evidence that supports the idea of a linear relationship
+between the response and predictor variables.
+
+$R^2$, called the coefficient of multiple determination, is the
+proportion of the variance of the response variable that is explained by
+the model. $R^2$ is a value between 0 and 1, and the larger the value of
+$R^2$ the more of the variation of the response variables is explained
+by the model. SSR is the regression sum of squares, and SSTO is the
+total sum of squares.
+
+$$R^2 = \frac{SSR}{SSTO}$$
 
 # Results {#sec-results}
-
-After a couple years of funding and some improvements to small water
-systems in California, are there correlations between risk indicator
-scores? To begin this analysis this paper looked at a scatterplot of the
-CalEnviroScreen Score and MHI (@fig-calenviron-mhi). Only smaller water
-systems with fewer than 3300 service connections are included. Each data
-point is colored to show if the water system is at risk of failing to
-provide clean drinking water by separating the data into four risk
-categories.The larger the CalEnviroScreen Score, the more pollution a
-population may be subject to. General pollution may or may not directly
-impact water quality. The scatterplot below indicates lower MHI seems to
-have more At-Risk water systems. The larger the value of the MHI for the
-water system, the fewer water systems that have high CalEnviroScreen
-score. This scatterplot is included to show the general range of
-CalEnviroScreen scores for the small water systems in this paper and
-possible grouping of risk levels.
 
 ```{r fig-calenviron-mhi}
 #| echo: false # not going to print out the code, but will do the plot 
@@ -240,68 +266,16 @@ remove_missing_data$TOTAL_WEIGHTED_RISK_SCORE_BEFORE_DIVIDING_BY_CATEGORY_COUNT 
 
 # filter data so has only rows with fewer than 3300 service connections 
 water_data_small_systems <- filter(remove_missing_data, SERVICE_CONNECTIONS < 3300)  
-
-# scatterplot 
-ggplot(data = water_data_small_systems, aes(x = MHI, y = CALENVIRO_SCREEN_SCORE, color = RISK_ASSESSMENT_RESULT)) +   
-  geom_point(size = 0.8) +    
-  ylab("CalEnvironScreen Score") +    
-  xlab("Median Household Income ($)") +   
-  labs(title = "California Environmental Screening Score vs Median Household Income", subtitle = "Grouped by Small Water Systems' Risk Assessment Value", color = "Risk Value")
 ```
 
-```{r fig-calenviro-mhi-DAC}
-#| echo: false # not going to print out the code, but will do the plot
-#| warning: false
-#| message: false
-#| fig-cap: "Scatter plot of calenvironscreen versus MHI grouped by service area economic status"
-
-# scatterplot
-ggplot(data = water_data_small_systems, aes(x = MHI, y = CALENVIRO_SCREEN_SCORE, color = SERVICE_AREA_ECONOMIC_STATUS)) +
-  geom_point(size = 0.8) + 
-  ylab("CalEnvironScreen Score") + 
-  xlab("Median Household Income ($)") +
-  labs(title = "California Environmental Screening Score vs Median Household Income", subtitle = "Grouped by Service Area Economic Status", color = "Economic Status")
-
-max_dac_calenviro <- water_data_small_systems |> 
-  group_by(SERVICE_AREA_ECONOMIC_STATUS) |>
-  summarise(max = max(CALENVIRO_SCREEN_SCORE, na.rm = TRUE))
-
-min_dac_calenviro <- water_data_small_systems |> 
-  group_by(SERVICE_AREA_ECONOMIC_STATUS) |>
-  summarise(min = min(CALENVIRO_SCREEN_SCORE, na.rm = TRUE))
-
-ave_dac_calenviro <- water_data_small_systems |> 
-  group_by(SERVICE_AREA_ECONOMIC_STATUS) |>
-  summarise(ave = mean(CALENVIRO_SCREEN_SCORE, na.rm = TRUE))
-```
-
-A second scatterplot (@fig-calenviro-mhi-DAC) again graphs
-CalEnviroScreen Score against MHI, but this time groups the data by the
-economic status of the service area. The status could be a Disadvantaged
-Community (DAC), a Severely Disadvantaged Community (SDAC), or a
-Non-Disadvantaged Community (Non-DAC). The classifications of how
-disadvantaged a community is is a direct calculation based on MHI, as
-shown by the vertical sections on the scatterplot. Both the DAC and SDAC
-communities have a large range of CalEnviroScreen Scores. The Non-DAC
-communities have a smaller range of values and the values are less in
-general.
-
-The SDAC communities CalEnviroScreen Score ranged from
-`r round(min_dac_calenviro[3,2], 3)` to
-`r round(max_dac_calenviro[3,2],3)` with and average value of
-`r round(ave_dac_calenviro[3,2],3)`. The DAC communities CalEnviroScreen
-Score ranged from `r round(min_dac_calenviro[1,2], 3)` to
-`r round(max_dac_calenviro[1,2],3)` with and average value of
-`r round(ave_dac_calenviro[1,2],3)`.The Non-DAC communities
-CalEnviroScreen Score ranged from `r round(min_dac_calenviro[2,2], 3)`
-to `r round(max_dac_calenviro[2,2],3)` with and average value of
-`r round(ave_dac_calenviro[2,2],3)`.
-
-Now this paper will look at how the Total Risk Score varies with
+After a couple years of funding and some improvements to small water
+systems in California, are there correlations between risk indicator
+scores? This paper will look at how the Total Risk Score varies with
 CalEnviroScreen Score, and if a linear model is a good choice for the
-association. In @fig-calenviro-totalRisk a scatterplot is created
-showing a possible positive association between Total Risk Score and
-CalEnviroScreen Score. Included in the scatterplot is a linear
+association. Only smaller water systems with fewer than 3300 service
+connections are included. In @fig-calenviro-totalRisk a scatterplot is
+created showing a possible positive association between Total Risk Score
+and CalEnviroScreen Score. Included in the scatterplot is a linear
 regression line.
 
 ```{r fig-calenviro-totalRisk}
@@ -313,7 +287,7 @@ regression line.
 # scatterplot
 ggplot(data = water_data_small_systems, aes(x = CALENVIRO_SCREEN_SCORE, y = TOTAL_WEIGHTED_RISK_SCORE_BEFORE_DIVIDING_BY_CATEGORY_COUNT)) +
   geom_point(size = 0.8) + 
-  geom_smooth() + 
+  geom_smooth(se=FALSE) + 
   ylab("Total Risk Score") + 
   xlab("CalEnviroScreen Score") +
   labs(title = "Small Water System Total Risk Score vs CalEnviroScreenScore")
@@ -337,26 +311,26 @@ $b_0$ value of `r round(coef(lm_calenviro)[1],3)` and the $b_1$ value of
 @sec-methods, the intercept $b_0$ does not have great interpretation
 because a predictor value of CalEnviroScreen Score equal to zero is not
 a reasonable value for an actual data point. The $b_1$ value represents
-the slope of the linear model and means that for every unit increase in
-the CalEnviroScreen Score for a small water system, the Total Risk Score
-has increased by about `r round(coef(lm_calenviro)[2],4)`. The positive
-slope matches the visual on the scatterplot that there is a positive
-association.
+the estimated slope of the linear model and means that for every unit
+increase in the CalEnviroScreen Score for a small water system, the
+Total Risk Score has increased by about
+`r round(coef(lm_calenviro)[2],4)`. The positive slope matches the
+visual on the scatterplot that there is a positive association.
 
 In the model the p-value is small (much smaller than 0.001) for both the
 intercept and slope estimates, indicating there may be some significance
-to the model. However, the large range of values in the data for each
-predictor level, and the smaller $R^2$ value of
-`r lm_calenviro_summary$r.squared` means that the model may not be the
-best fit for the data and may not do a good job of explaining the
-variance.
+to the model (see section @methods for p-value and $R^2$). However, the
+large range of values in the data for each predictor level, and the
+smaller $R^2$ value of `r lm_calenviro_summary$r.squared` means that the
+model may not be the best fit for the data because only about 12.7% of
+the variance in the data is explained by the model.
 
 The CalEnviroScreen score is the result of several factors that may
 contribute to pollution in an area and is not explained purely by the
 income level of the local population.
 
-Below is a residual plot from the linear regression model, plotting the
-residual against the fitted value. If this plot shows random points
+The residual plot @fig-residuals from the linear regression model, plots
+the residuals against the fitted value. If this plot shows random points
 above and below zero with no clear trend then this suggests that the
 model could be a good fit for the data. If the residuals show a trend
 that is curved or something that is not horizontal at y=0, it could
@@ -378,7 +352,6 @@ suggest some of the assumptions in the model are not met.
 ggplot(data.frame(residuals = residuals(lm_calenviro), fitted = fitted(lm_calenviro)),
        aes(x = fitted, y = residuals)) +
   geom_point() + # Scatter plot of residuals
-  geom_smooth(method = "loess", se = FALSE, color = "blue") + # Add a loess smoothed line
   geom_hline(yintercept = 0, color = "red", linetype = "dashed") + # Add horizontal line at zero
   xlab("Fitted Values") +
   ylab("Residuals") +
@@ -386,10 +359,14 @@ ggplot(data.frame(residuals = residuals(lm_calenviro), fitted = fitted(lm_calenv
 
 ```
 
-The residual plot @fig-residuals has a small trend line, dipping down in the middle and is not perfectly horizontal at y=0, but there is not a large trend in the residuals suggesting a significant pattern that is not explained by the model. The residuals appear to be spread wider above the y=0 line, possibly suggesting that it is not a symmetrical distribution. The residuals also have a wider range on the right of the plot, fanning
-out slightly, meaning the assumption of constant variance in the error terms is
-not met. The p-test or t-test values may not be reliable.
-
+The residual plot @fig-residuals does not display an obvious visual
+trend in the residuals. This suggesting that the residuals do not have
+their own significant pattern that is not explained by the model. The
+residuals appear to be spread wider above the y=0 line, possibly
+suggesting that it is not a symmetrical distribution. The residuals also
+have a wider range on the right of the plot, fanning out slightly,
+meaning the assumption of constant variance in the error terms is not
+met. The values from the t-test may not be reliable.
 
 ```{r fig-qq}
 #| echo: false # not going to print out the code, but will do the plot
@@ -405,17 +382,53 @@ ggplot(data = NULL, aes(sample = resid(lm_calenviro))) +
        y = "Sample Quantiles") +
   theme_minimal()
 ```
-In the Q-Q plot of the residuals @fig-qq the values stray far from the y=x line, suggesting that the assumption of normality in the errors is not met. However, this analysis has over 2000 data points which limits the reliance on the assumption of normality and does not mean the model is useless or useful by itself. 
 
+In the Q-Q plot of the residuals @fig-qq the values stray far from the
+y=x line, suggesting that the assumption of normality in the errors is
+not met. However, this analysis has over 2000 data points which limits
+the reliance on the assumption of normality and does not mean the model
+is useless or useful by itself.
 
 # Discussion {#sec-discussion}
 
-If the CalEnviroScreen Scores are a good predictor of the Total Risk Score response variable, a possible application of the model would be to use the CalEnviroScreen scores to decide which small water systems get funding and resources. Right now there are multiple agencies looking at similar data and ideas: can we identify factors put water quality and water systems at risk for contamination or failing to provide safe and accessible water. This puts a strain on resources. If we can use a score or other information that already exists to predict with some certainty which water systems are at risk of failing for any reason, then the funding can have a more direct path.
+If the CalEnviroScreen Scores are a good predictor of the Total Risk
+Score response variable, a possible application of the model would be to
+use the CalEnviroScreen scores to decide which small water systems get
+funding and resources. Right now there are multiple California agencies
+looking at similar data and ideas: can we identify factors that affect
+drinking water quality, what factors put small water systems at risk for
+contamination, and what factors put small water systems at risk of
+failing to provide safe and accessible water? Multiple agencies
+repeating the same efforts puts a strain on resources. If information
+that already exists can be used to predict which water systems are at
+risk of failing for any reason, then the funding can have a more direct
+and efficient path.
 
-The linear model in this paper suggests that there is a positive association between the two scores, and a linear model is an appropriate model to use. However, both scores are based on a weighted calculation of approximately 20 indicators each. And some of the indicators in both calculations overlap in the information they provide. Both scores look at socioeconomic status of the populations served in different locations and use it as part of the calculation. This is a positive because if a similar indicator is a good predictor of whether a water system is at risk of failing, then one score could be used in place of the other. However, that overlap limits how much we can trust the predictive value of the linear regression model because that association could be based on that similar indicator.
+The linear model in this paper suggests that there is a positive
+association between the two scores, and a linear model is an appropriate
+model to use. However, both scores are based on a weighted calculation
+of approximately 20 indicators each. Some of the indicators in both
+calculations overlap in the information they provide. Both scores look
+at socioeconomic status of the populations served in different locations
+and use it as part of the calculation. The positive association between
+the two scores is probably due in part to the overlap in the information
+in the calculations of the score.
 
-There is still work to be done to evaluate whether or not the funding and improvements are actually helping the small water systems that are at risk of failure. We still do not know if the Total Risk Score is correctly identifying the communities with the highest need or highest risk, and if the improvements are making sustainable long term improvements. 
+Does this mean that the CalEnviroScreen Score could be used instead of
+the Total Risk Score in determining which small water systems should
+receive funding? The positive association suggests that it is a
+possibility, but because of the overlap in information used to calculate
+the scores more work needs to be done to show that CalEnviroScreen Score
+is actually a good tool to allocate funding. How much of each score is
+based on the overlapping information? Does the overlap account entirely
+for the positive association?
 
+In addition, there is still work to be done to evaluate whether or not
+the funding and improvements are actually helping the small water
+systems that are at risk of failure. We still do not know if the Total
+Risk Score is correctly identifying the communities with the highest
+need or highest risk, and if the improvements are making sustainable
+long term improvements.
 
 \newpage
 
@@ -523,7 +536,7 @@ quality and adequacy of the water supply.
 # Appendix C CalEnviroScreen Score Indicators {#sec-calenviroindicator}
 
 | Group | Subtype / sub-group | Indicators | Brief description |
-|-------------|-------------|-------------|--------------------------------|
+|---------------|---------------|---------------|----------------------------|
 | **Pollution Burden** | *Exposure Indicators* | Ozone | Average daily maximum ozone concentration |
 |  |  | PM₂.₅ | Fine particulate matter concentrations (using monitors + satellite data) |
 |  |  | Diesel Particulate Matter | Diesel PM emissions (on‐road, off‐road, and transboundary) |
